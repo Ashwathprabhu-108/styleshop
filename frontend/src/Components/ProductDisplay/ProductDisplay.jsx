@@ -40,8 +40,7 @@ const ProductDisplay = (props) => {
                     <div className="productdisplay-right-price-new">₹{product.new_price}</div>
                 </div>
                 <div className="productdisplay-right-description">
-                    A knitted pullover dress made from soft, cozy fabric with a ribbed texture. 
-                    It features a high turtleneck, long sleeves, and a relaxed fit for warmth.
+                    {product.description}
                 </div>
                 <div className="productdisplay-right-size">
                     <h1>Select Size</h1>

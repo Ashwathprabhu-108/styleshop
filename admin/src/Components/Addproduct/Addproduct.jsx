@@ -5,13 +5,15 @@ import upload_area from '../../assets/upload_area.svg'
 const Addproduct = () => {
 
     const [image,setImage] = useState(false);
-    const [productDetails,setProductDetails] =useState({
-        name:"",
-        image:"",
-        category:"women",
-        new_price:"",
-        old_price:""
-    })
+    const [productDetails, setProductDetails] = useState({
+        name: "",
+        image: "",
+        category: "women",
+        new_price: "",
+        old_price: "",
+        description: ""  
+    });
+    
 
     const imageHandler = (e) =>{
         setImage(e.target.files[0]);
@@ -74,6 +76,10 @@ const Addproduct = () => {
                 <option value="men">Men</option>
                 <option value="kid">Kid</option>
             </select>
+        </div>
+        <div className="addproduct-itemfield">
+            <p>Description</p>
+            <textarea value={productDetails.description} onChange={changeHandler} name="description" placeholder="Type here" className="add-product-textarea"></textarea>
         </div>
         <div className="addproduct-itemfield">
             <label htmlFor="file-input">

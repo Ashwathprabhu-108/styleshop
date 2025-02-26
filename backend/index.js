@@ -11,7 +11,7 @@ const { log, error } = require("console");
 app.use(express.json());
 app.use(cors());
 //Database Connection With MongoDB
-mongoose.connect("mongodb+srv://styleshop:styleshop@cluster0.md9hr.mongodb.net/e-commerce");
+mongoose.connect("mongodb+srv://u05cs22s0006:u05cs22s0006@cluster0.7vczl.mongodb.net/styleshop");
 
 //API creation
 
@@ -43,40 +43,55 @@ app.post("/upload",upload.single('product'),(req,res)=>{
 
 //Schema for Creating Products
 
-const Product = mongoose.model("Product",{
-    id:{
+const Product = mongoose.model("Product", {
+    id: {
         type: Number,
-        required:true,
+        required: true,
     },
-    name:{
-        type:String,
-        required:true,
+    name: {
+        type: String,
+        required: true,
     },
-    image:{
-        type:String,
-        required:true,
+    image: {
+        type: String,
+        required: true,
     },
-    category:{
-        type:String,
-        required:true,
+    category: {
+        type: String,
+        required: true,
     },
-    new_price:{
-        type:Number,
-        required:true,
+    new_price: {
+        type: Number,
+        required: true,
     },
-    old_price:{
-        type:Number,
-        required:true,
+    old_price: {
+        type: Number,
+        required: true,
     },
-    date:{
-        type:Date,
-        default:Date.now,
+    date: {
+        type: Date,
+        default: Date.now,
     },
-    available:{
-        type:Boolean,
-        default:true,
+    available: {
+        type: Boolean,
+        default: true,
     },
-})
+    description: {
+        type: String,
+        required: true,
+    },
+    size: {
+        type: [String], 
+        required: true,
+    },
+    reviews: [
+        {
+            rating: { type: Number, required: true, min: 0, max: 5 }, 
+            text: { type: String, required: true },
+        },
+    ],
+});
+
 
 app.post('/addproduct',async (req,res) =>{
     let products = await Product.find({});
@@ -97,6 +112,7 @@ app.post('/addproduct',async (req,res) =>{
         category:req.body.category,
         new_price:req.body.new_price,
         old_price:req.body.old_price,
+        description:req.body.description,
     })
     console.log(product);
     await product.save();
@@ -126,25 +142,41 @@ app.get('/allproducts',async (req,res)=>{
 })
 
 // Schema Creating for User model
-const Users = mongoose.model('Users',{
-    name:{
-        type:String,
+const Users = mongoose.model('Users', {
+    name: {
+        type: String,
+        required: true,
     },
-    email:{
-        type:String,
-        unique:true,
+    email: {
+        type: String,
+        unique: true,
+        required: true,
     },
-    password:{
-        type:String,
+    password: {
+        type: String,
+        required: true,
     },
-    cartData:{
-        type:Object,
+    cartData: {
+        type: Object,
+        default: {},
     },
-    date:{
-        type:Date,
-        default:Date.now,
+    address: {
+        type: new mongoose.Schema({
+            fullAddress: { type: String, required: true },
+            street: { type: String, required: true },
+            city: { type: String, required: true },
+            district: { type: String, required: true },
+            state: { type: String, required: true },
+            pincode: { type: String, required: true },
+            phoneNumber: { type: String, required: true },
+        }),
+        required: true,
+    },
+    date: {
+        type: Date,
+        default: Date.now,
     }
-})
+});
 
 //creating endpoint for admin user details
 app.get('/getallcarts',async (req,res)=>{
@@ -180,6 +212,15 @@ app.post('/signup',async (req,res)=>{
         email:req.body.email,
         password:req.body.password,
         cartData:cart,
+        address: {
+            fullAddress: req.body.address.fullAddress,
+            street: req.body.address.street,
+            city: req.body.address.city,
+            district: req.body.address.district,
+            state: req.body.address.state,
+            pincode: req.body.address.pincode,
+            phoneNumber: req.body.address.phoneNumber,
+        }
     })
 
     await user.save();
